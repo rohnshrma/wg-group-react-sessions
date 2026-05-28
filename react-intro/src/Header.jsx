@@ -3,8 +3,8 @@ const Header = (props) => {
 
   return (
     <div>
-      <h1>hello world my name is {props.txt}</h1>
-      <p>{props.author}</p>
+      <h1>{props.text}</h1>
+      <span>Author : {props.by}</span>
     </div>
   );
 };
