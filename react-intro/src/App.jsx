@@ -1,27 +1,20 @@
-import Header from "./Header";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-
-import data from "./data.js";
-import Card from "./Card.jsx";
-
+import Count from "./Count";
+import Header from "./Header";
+import Timer from "./Timer";
+import Form from "./Form";
 const App = () => {
-  var isLight = true;
-
-  var properties = {
-    backgroundColor: isLight ? "#fff" : "#333",
-    color: isLight ? "#333" : "#fff",
-  };
-
+  console.log("App Re-rendered");
   return (
-    <div style={properties}>
-      <Header text="Pokemon's" />
-
+    <div>
+      <Header text="Counter App" />
       <hr />
-
-      {data.map((item) => (
-        <Card name={item.name} type={item.type} key={item.id} />
-      ))}
+      <Count />
+      <hr />
+      {/* <Timer /> */}
+      <hr />
+      <Form />
     </div>
   );
 };
