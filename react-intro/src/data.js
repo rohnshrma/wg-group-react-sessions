@@ -1,0 +1,68 @@
+const data = [
+  {
+    id: 1,
+    name: "Bulbasaur",
+    type: ["Grass", "Poison"],
+    hp: 45,
+    attack: 49,
+    defense: 49,
+  },
+  {
+    id: 4,
+    name: "Charmander",
+    type: ["Fire"],
+    hp: 39,
+    attack: 52,
+    defense: 43,
+  },
+  {
+    id: 7,
+    name: "Squirtle",
+    type: ["Water"],
+    hp: 44,
+    attack: 48,
+    defense: 65,
+  },
+  {
+    id: 25,
+    name: "Pikachu",
+    type: ["Electric"],
+    hp: 35,
+    attack: 55,
+    defense: 40,
+  },
+  {
+    id: 39,
+    name: "Jigglypuff",
+    type: ["Normal", "Fairy"],
+    hp: 115,
+    attack: 45,
+    defense: 20,
+  },
+  {
+    id: 94,
+    name: "Gengar",
+    type: ["Ghost", "Poison"],
+    hp: 60,
+    attack: 65,
+    defense: 60,
+  },
+  {
+    id: 133,
+    name: "Eevee",
+    type: ["Normal"],
+    hp: 55,
+    attack: 55,
+    defense: 50,
+  },
+  {
+    id: 143,
+    name: "Snorlax",
+    type: ["Normal"],
+    hp: 160,
+    attack: 110,
+    defense: 65,
+  },
+];
+
+export default data;
