@@ -4,17 +4,19 @@ import Count from "./Count";
 import Header from "./Header";
 import Timer from "./Timer";
 import Form from "./Form";
+import ComplexForm from "./ComplexForm";
 const App = () => {
   console.log("App Re-rendered");
   return (
     <div>
-      <Header text="Counter App" />
+      {/* <Header text="Counter App" /> */}
       <hr />
-      <Count />
+      {/* <Count /> */}
       <hr />
       {/* <Timer /> */}
       <hr />
-      <Form />
+      {/* <Form /> */}
+      <ComplexForm />
     </div>
   );
 };
