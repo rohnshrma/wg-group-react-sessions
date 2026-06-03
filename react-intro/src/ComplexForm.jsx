@@ -1,12 +1,9 @@
 import { useState } from "react";
 
-const ComplexForm = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-  });
+const ComplexForm = (props) => {
+  const { onAdd } = props;
 
-  const [finalData, setFinalData] = useState({
+  const [formData, setFormData] = useState({
     name: "",
     email: "",
   });
@@ -36,13 +33,11 @@ const ComplexForm = () => {
   const submitHandler = (e) => {
     e.preventDefault();
 
-    setFinalData(formData);
+    onAdd(formData);
   };
 
   return (
     <div>
-      <h1>{finalData.name}</h1>
-      <p>{finalData.email}</p>
       <form className="form" onSubmit={submitHandler}>
         <div className="form-group">
           <input
