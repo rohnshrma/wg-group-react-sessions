@@ -1,117 +1,171 @@
-// We import useState from React so this component can remember changing values.
-import { useState } from "react";
+// We import useReducer from React.
+// useReducer is another way to store and update changing data in a component.
+// It is useful when the update logic has multiple possible actions.
+import { useReducer } from "react";
 
-// ComplexForm is a React component. Think of it like a reusable form box.
+// This is the simple flow of this form:
+// user event -> handler function -> dispatch action -> reducer checks action -> reducer returns new state
+
+// initialState is the starting data for our form.
+// Think of it as the empty form before the user types anything.
+const initialState = {
+  // The name input starts empty.
+  name: "",
+  // The email input starts empty.
+  email: "",
+};
+
+// formReducer is the function that decides HOW the form data should change.
+// "state" means the current form data.
+// "action" means the instruction we send, like "change name" or "reset form".
+const formReducer = (state, action) => {
+  // This logs the current state and the incoming action in the browser console.
+  // It helps you see how reducer data moves step by step while learning.
+  console.log("State => ", state, "action => ", action);
+
+  // If the action says NAMECHANGE, we update only the name field.
+  if (action.type === "NAMECHANGE") {
+    // A reducer must return a new state object.
+    // React will use this returned object as the latest formData.
+    return {
+      // action.payload contains the new name typed by the user.
+      name: action.payload,
+      // Keep the old email exactly as it was.
+      // This is important because changing the name should not erase the email.
+      email: state.email,
+    };
+  }
+
+  // If the action says EMAILCHANGE, we update only the email field.
+  if (action.type === "EMAILCHANGE") {
+    // Return a new state object with the updated email.
+    return {
+      // Keep the old name exactly as it was.
+      // This is important because changing the email should not erase the name.
+      name: state.name,
+      // action.payload contains the new email typed by the user.
+      email: action.payload,
+    };
+  }
+
+  // If the action says RESET, we clear the whole form.
+  if (action.type === "RESET") {
+    // Return the form back to empty values.
+    return {
+      // Clear the name input.
+      name: "",
+      // Clear the email input.
+      email: "",
+    };
+  }
+
+  // If the reducer receives an action type it does not understand,
+  // return the current state unchanged.
+  return state;
+};
+
+// ComplexForm is a React component.
+// It displays a form and sends the submitted data to its parent component.
 const ComplexForm = (props) => {
-  // props is the object of values/functions sent from the parent component.
-  // Here we pull out only the onAdd function from props.
+  // props is the object of things passed from the parent component.
+  // Here we take out onAdd, which is a function from the parent.
   const { onAdd } = props;
 
-  // formData stores the current text typed inside the form inputs.
-  // setFormData is the function we use whenever we want to update formData.
-  const [formData, setFormData] = useState({
-    // At the start, the name input is empty.
-    name: "",
-    // At the start, the email input is also empty.
-    email: "",
-  });
+  // useReducer gives us two things:
+  // formData: the current form state, like { name: "Rohan", email: "..." }
+  // dispatch: a function used to send actions to the reducer.
+  // formReducer: the function that knows how to update the state.
+  // initialState: the starting value when the component first loads.
+  const [formData, dispatch] = useReducer(formReducer, initialState);
 
-  // changeHandler runs every time the user types in any input field.
-  const changeHandler = (e) => {
-    // e means "event". It carries details about what just happened.
-    // e.target means the exact input field where the user typed.
-    // name is the input's name attribute, like "name" or "email".
-    // value is the latest text written inside that input.
-    var { name, value } = e.target;
+  // This function runs whenever the user types in the name input.
+  const nameChangeHandler = (e) => {
+    // e is the event object from the browser.
+    // e.target is the input box that changed.
+    // e.target.value is the latest text inside that input box.
+    var input = e.target.value;
 
-    // This prints the changing field name and value in the browser console.
-    // Example: name Rohan, or email rohan@gmail.com
-    console.log(name, value);
-
-    // We update formData using the previous formData as the starting point.
-    setFormData((prevData) => {
-      // React expects us to return the new updated object from here.
-      return {
-        // ...prevData copies all older values first.
-        // This prevents the other input field from being erased.
-        ...prevData,
-        // [name] means "use the input's name as the key".
-        // If name is "email", this updates email.
-        // If name is "name", this updates name.
-        [name]: value,
-      };
-    });
+    // dispatch sends an action to formReducer.
+    // type tells the reducer what kind of change we want.
+    // payload carries the actual new value typed by the user.
+    dispatch({ type: "NAMECHANGE", payload: input });
   };
 
-  // submitHandler runs when the user clicks Submit or presses Enter in the form.
+  // This function runs whenever the user types in the email input.
+  const emailChangeHandler = (e) => {
+    // Store the latest email text typed by the user.
+    var input = e.target.value;
+
+    // Send an EMAILCHANGE action to the reducer with the new email value.
+    dispatch({ type: "EMAILCHANGE", payload: input });
+  };
+
+  // This function runs when the form is submitted.
   const submitHandler = (e) => {
-    // By default, a browser reloads the page after form submit.
-    // preventDefault stops that reload so React can handle the form smoothly.
+    // Stop the browser's default form behavior.
+    // Without this, the page may refresh after clicking Submit.
     e.preventDefault();
 
-    // We send the completed formData object to the parent component.
-    // The parent decides what to do with this new data.
+    // Send the current formData to the parent component using onAdd.
+    // The parent can then add it to a list, show it on screen, or store it.
     onAdd(formData);
 
-    // After submitting, we clear the input fields by resetting formData.
-    setFormData({
-      // Empty name field again.
-      name: "",
-      // Empty email field again.
-      email: "",
-    });
+    // After submitting, send a RESET action to clear the form fields.
+    dispatch({ type: "RESET" });
   };
 
-  // Whatever we return from a React component becomes visible on the screen.
+  // The JSX below describes what should appear on the page.
   return (
-    // This outer div simply wraps the whole form.
+    // This div wraps the whole form.
     <div>
-      {/* The form groups the inputs and connects submitHandler to form submit. */}
+      {/* onSubmit connects the form submit event to submitHandler. */}
       <form className="form" onSubmit={submitHandler}>
-        {/* This div is only for styling/grouping the name input. */}
+        {/* This group contains the name input. */}
         <div className="form-group">
-          {/* This input is where the user types their name. */}
+          {/* This input lets the user type their name. */}
           <input
-            // When the user types, changeHandler updates formData.
-            onChange={changeHandler}
-            // type="text" means normal text can be entered here.
+            // Run nameChangeHandler every time the name input changes.
+            onChange={nameChangeHandler}
+            // This is a normal text input.
             type="text"
-            // className applies CSS classes for styling.
+            // These CSS classes are used for styling the input.
             className="form-control"
-            // placeholder is the grey hint shown before the user types.
+            // Placeholder is the hint text shown before typing.
             placeholder="enter name"
-            // value connects this input to formData.name.
-            // This makes it a controlled input, meaning React controls its value.
+            // The input value comes from formData.name.
+            // This makes React the boss of the input value.
             value={formData.name}
-            // name="name" tells changeHandler which field to update.
+            // The name attribute labels this input as the name field.
             name="name"
           />
         </div>
-        {/* This div is only for styling/grouping the email input. */}
+
+        {/* This group contains the email input. */}
         <div className="form-group">
-          {/* This input is where the user types their email address. */}
+          {/* This input lets the user type their email. */}
           <input
-            // When the user types, changeHandler updates formData.
-            onChange={changeHandler}
-            // type="email" gives browser email-related checks and keyboard help.
+            // Run emailChangeHandler every time the email input changes.
+            onChange={emailChangeHandler}
+            // type="email" tells the browser this should be an email address.
             type="email"
-            // className applies CSS classes for styling.
+            // These CSS classes are used for styling the input.
             className="form-control"
-            // placeholder is the grey hint shown before the user types.
+            // Placeholder is the hint text shown before typing.
             placeholder="Enter email"
-            // value connects this input to formData.email.
-            // React always shows whatever is stored in formData.email.
+            // The input value comes from formData.email.
+            // When RESET happens, this becomes empty again.
             value={formData.email}
-            // name="email" tells changeHandler to update the email field.
+            // The name attribute labels this input as the email field.
             name="email"
           />
         </div>
-        {/* This button submits the form because it is inside a form element. */}
+
+        {/* This button submits the form because it is inside the form tag. */}
         <button className="btn btn-success btn-block">Submit</button>
       </form>
     </div>
   );
 };
 
-// This makes ComplexForm available to import and use in other files.
+// Exporting lets other files import and use this ComplexForm component.
 export default ComplexForm;
