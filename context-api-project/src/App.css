@@ -1,0 +1,60 @@
+.app {
+  max-width: 500px;
+  margin: 50px auto;
+  padding: 20px;
+  border-radius: 8px;
+  background: white;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+}
+
+h1 {
+  text-align: center;
+}
+
+form {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+input,
+button {
+  padding: 10px;
+  border-radius: 8px;
+  font: inherit;
+}
+
+input {
+  border: 1px solid #d8dee8;
+}
+
+button {
+  border: 0;
+  background: #17202a;
+  color: white;
+  cursor: pointer;
+}
+
+.expenses {
+  display: grid;
+  gap: 10px;
+}
+
+.expense {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border: 1px solid #edf0f5;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.expense h2,
+.expense p {
+  margin: 0;
+}
+
+.expense button {
+  background: #e11d48;
+}
